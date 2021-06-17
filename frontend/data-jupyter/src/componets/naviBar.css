@@ -1,0 +1,40 @@
+.NaviBarWrapper {
+    background-color: aqua;
+    position: fixed;
+    top:0;
+    width: 100%;
+    height: 60px;
+    z-index: 100;
+
+}
+
+.titleWrapper {
+    background-color: lightblue;
+    display: table;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: darkblue 5px;
+    position: absolute;
+    height: 60px;
+    margin: 0;
+}
+
+
+.info{
+    position: relative;
+    top: 17px;
+    padding-right: 20px;
+    text-align: right;
+}
+
+.displayInfo{
+    position: fixed;
+    top:60px;
+    right:2%;
+    background-color:lightblue;
+    z-index: 20;
+    width: 20%;
+    padding-left: 20px;
+    border-style: solid;
+    border-color: paleturquoise;
+}

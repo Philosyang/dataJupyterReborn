@@ -1,0 +1,44 @@
+.WorkFlowWrapper {
+    position: absolute;
+    top: 60px;
+    width: 100%;
+    display: flex;
+}
+
+.displayArea {
+    position: absolute;
+    left:5%;
+    right: 40%;
+}
+
+.dividingStick{
+    position: fixed;
+    background: darkblue;
+    left:65%;
+    height: 100%;
+    width: 0.25%;
+}
+
+.inputArea {
+    position: absolute;
+    left:67.5%;
+    top: 20px;
+    right : 1.5%
+}
+
+.inputNoteWrapper {
+    background-color: lightgreen;
+    padding: 10px;
+    position: relative;
+
+}
+
+.userInput {
+    position: relative;
+    top: 50px;
+}
+
+.result {
+    background-color:#4d6d9a;
+    text-align: center;
+}

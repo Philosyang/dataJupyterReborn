@@ -1,0 +1,6 @@
+.selectionSteps {
+    position: fixed;
+    bottom: 10px;
+    left: 65.025%;
+    z-index: 101;
+}

@@ -1,0 +1,23 @@
+
+.inputBoxesWrapper{
+    display: flex;
+}
+
+.submitButton{
+    padding: 20px;
+    position: relative;
+    right: 30px;
+    top: 24px;
+    text-align: right;
+}
+
+.lastSearch{
+    position: relative;
+    top: 40px;
+    background-color: lightgreen;
+    padding: 10px;
+    border-style: solid;
+    border-color: lightgreen;
+    border-radius: 10px;
+    padding-left: 40px;
+}

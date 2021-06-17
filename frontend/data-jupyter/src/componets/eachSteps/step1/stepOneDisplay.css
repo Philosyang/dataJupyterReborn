@@ -1,0 +1,9 @@
+.singleBlock{
+    border-style: solid;
+    border-color: paleturquoise;
+    border-radius: 10px;
+    padding: 20px;
+    word-wrap: break-word;
+    margin: 10px;
+    background-color: lightblue;
+}
