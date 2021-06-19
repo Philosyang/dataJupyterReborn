@@ -23,4 +23,3 @@ def run_text_as_code(loc):
 def aba():
     ans = request.get_json()
     run_text_as_code(ans['name']['name'])
-    
