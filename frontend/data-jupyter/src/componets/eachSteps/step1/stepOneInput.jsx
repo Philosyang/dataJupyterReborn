@@ -31,11 +31,14 @@ export default function StepOneInput(props) {
 
     const handleSubmitText =()=>{
 
-        var data = pythonText
+        var data = {text:pythonText}
 
         fetch("/pythonText", {
-            body: data,
-            method: "POST"
+            body: JSON.stringify(data),
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            }
         })
     }
 
