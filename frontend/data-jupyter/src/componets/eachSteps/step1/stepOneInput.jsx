@@ -11,7 +11,7 @@ export default function StepOneInput(props) {
     const [displayUrls, setDisplayUrls] = useState(props.previosDisplay)
     const [url, setUrl] = useState("http://127.0.0.1:5000/aba");
     const [dis, setDis] = useState({name: "", ins: ""})
-    
+    const [pythonText, setPythonText] = useState("")
 
 
 
@@ -28,6 +28,16 @@ export default function StepOneInput(props) {
     useEffect(()=>{
         setDis({name: name, ins: institution})
     }, [])
+
+    const handleSubmitText =()=>{
+
+        var data = pythonText
+
+        fetch("/pythonText", {
+            body: data,
+            method: "POST"
+        })
+    }
 
 
 
@@ -59,9 +69,11 @@ export default function StepOneInput(props) {
             <div className = "inputBoxesWrapper">
                 <TextField style={{paddingRight: "30px"}} id="filled-basic" label="Name" variant="filled" onChange = {(e) =>{setName(e.target.value)}}/>
                 <TextField id="filled-basic" label="Instituion" variant="filled" onChange = {(e) =>{setInstitution(e.target.value)}}/>
+                <textarea name="python" id="" cols="30" rows="10" onClick={(e)=>{setPythonText(e.target.value)}}></textarea>
             </div>
             <div className = "submitButton">
                 <Button color = "primary" variant="contained" onClick={handleStepOneSubmit}>Submit</Button>
+                <button onClick = {handleSubmitText}>submit text</button>
             </div>
             {
                 dis["name"] === "" ? (
