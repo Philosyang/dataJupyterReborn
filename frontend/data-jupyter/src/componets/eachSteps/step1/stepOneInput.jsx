@@ -43,6 +43,12 @@ export default function StepOneInput(props) {
     }
 
 
+    const handleKeyDown = (e) =>{
+        if (e.keyCode === 9) {
+            e.preventDefault()
+            setPythonText(pythonText.concat("    ")) 
+        }
+    }
 
     const handleStepOneSubmit = () =>{
 
@@ -70,7 +76,7 @@ export default function StepOneInput(props) {
     return(
         <div className = "StepOneInputWrapper">
             <div className = "inputBoxesWrapper">
-                <textarea name="python" id="" cols="30" rows="10" onChange={(e)=>{setPythonText(e.target.value)}}></textarea>
+                <textarea onKeyDown = {handleKeyDown} value ={pythonText} spellCheck = "false" name="python" id="" cols="50" rows="20" onChange={(e)=>{setPythonText(e.target.value); console.log(pythonText)}}></textarea>
             </div>
             <div className = "submitButton">
                 <button onClick = {handleSubmitText}>submit text</button>
