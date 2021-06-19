@@ -70,12 +70,9 @@ export default function StepOneInput(props) {
     return(
         <div className = "StepOneInputWrapper">
             <div className = "inputBoxesWrapper">
-                <TextField style={{paddingRight: "30px"}} id="filled-basic" label="Name" variant="filled" onChange = {(e) =>{setName(e.target.value)}}/>
-                <TextField id="filled-basic" label="Instituion" variant="filled" onChange = {(e) =>{setInstitution(e.target.value)}}/>
-                <textarea name="python" id="" cols="30" rows="10" onClick={(e)=>{setPythonText(e.target.value)}}></textarea>
+                <textarea name="python" id="" cols="30" rows="10" onChange={(e)=>{setPythonText(e.target.value)}}></textarea>
             </div>
             <div className = "submitButton">
-                <Button color = "primary" variant="contained" onClick={handleStepOneSubmit}>Submit</Button>
                 <button onClick = {handleSubmitText}>submit text</button>
             </div>
             {
