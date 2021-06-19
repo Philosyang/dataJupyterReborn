@@ -6,6 +6,9 @@ import csv
 app = Flask(__name__)
 spreads = []
 develops = []
+#def select(l, r):
+ #   if len(spreads > 0) and (l < len(spreads)) and (l >= 0) and (r < len(spreads[0])) and (r >=0):
+  #      develops = spreads[]
 def add_row(dic):
     with open('spreadsheet.csv', mode='a', newline="") as csv_file:
         fieldnames = []
@@ -26,6 +29,7 @@ def add_rowssec(dic):
     if (len(spreads) == 0):
         spreads.append(field)
     spreads.append(row)
+
 def query(attr, value):
     if (len(spreads) == 0):
         return 'not'
