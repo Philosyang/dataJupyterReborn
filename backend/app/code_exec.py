@@ -59,8 +59,8 @@ def pop_row(attr, value):
     
 def run_text_as_code(loc):
     exec(loc)
-@app.route('/aba', methods=['POST'])
+@app.route('/pythonText', methods=['POST'])
 def aba():
     ans = request.get_json()
-    run_text_as_code(ans['name']['name'])
+    run_text_as_code(ans['text'])
     print(spreads)
