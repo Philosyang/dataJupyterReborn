@@ -3,21 +3,37 @@ import "./stepOneDisplay.css"
 
 
 export default function StepOneDisplay(props){
-    if(props.allUrls === null ) {
-        return <h4>nothing</h4>
-    }
+
+
+    var data = props.data
 
 
     return(
         <div className = "stepOneDisplayWrapper">
-            {props.allUrls.map((a)=>{
-                return(
-                    <div className = "singleBlock">
-                        <h1>{a["title"]}</h1>
-                        <a target="_blank" href = {a["link"]}>{a["link"]}</a>
-                    </div>
-                )
-            })}
+            <table>
+                {data === undefined ?
+                <h1>
+                    no data yet
+                </h1>
+                :  data.map((items, index)=>{
+                    if (index === 0){
+                        return <tr>
+                            {items.index}
+                        </tr>
+                    } else {
+                        return <tr>
+                            <td>
+                                notyet
+                            </td>
+                        </tr>
+                    }
+
+                }) }
+
+            </table>
+            <button onClick= {()=>{
+                console.log(data[0])
+            }}> click</button>
         </div>
     )
 }

@@ -1,6 +1,10 @@
 import {React, useEffect, useState} from "react"
 import {TextField, Button} from '@material-ui/core';
+import AceEditor from "react-ace";
+import 'ace-builds/src-noconflict/theme-monokai'
+import 'ace-builds/src-noconflict/mode-python'
 import "./stepOneInput.css"
+import ace from "react-ace";
 
 
 
@@ -12,22 +16,12 @@ export default function StepOneInput(props) {
     const [url, setUrl] = useState("http://127.0.0.1:5000/aba");
     const [dis, setDis] = useState({name: "", ins: ""})
     const [pythonText, setPythonText] = useState("")
+    const [aceValue, setAceValue] = useState("")
+    const [resultFromPython, setResultFromPython] = useState([])
 
 
 
-    useEffect(
-        ()=>{props.changInputOnePair({name, institution}); console.log("submitted, sent steponeinput state to workflow",{name, institution})
-        setDis({name: name, ins: institution})
-    }
-    , [isSubmitted])
 
-    useEffect(
-        ()=>{props.displayUrls(displayUrls)}
-    ,[displayUrls])
-
-    useEffect(()=>{
-        setDis({name: name, ins: institution})
-    }, [])
 
     const handleSubmitText =()=>{
 
@@ -50,46 +44,69 @@ export default function StepOneInput(props) {
         }
     }
 
-    const handleStepOneSubmit = () =>{
 
-        setIsSubmitted(true)
-        setDis({name: name, ins: institution})
-        var data = {name: {name}, institution: {institution}}
-        console.log(data)
-        fetch("/aba", {
+
+    useEffect(()=>{
+        resultFromPython.forEach((item)=>{
+            console.log(item)
+        })
+        props.passData(resultFromPython)
+    },[resultFromPython])
+
+
+    const handleAceChange = (e) =>{
+        setAceValue(e)
+    }
+
+    const handleCodeSubmit = () =>{
+        console.log(aceValue)
+        var data = {text:aceValue}
+        fetch("/aceValue", {
             body: JSON.stringify(data),
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
             }
+        }).then((response) => {
+            var results =  response.json()
+            return results
         }).then((response)=>{
-            var res = response.json()
-            console.log(res)
-            return res
-        }).then((urls)=>{
-            console.log(urls["urls"]);
-            setDisplayUrls(urls["urls"])
-            //()=>{props.displayUrls(urls["urls"])}
+            var result = response["result"]
+            setResultFromPython(result)
         })
     }
 
-    return(
+    return(                                                                     
         <div className = "StepOneInputWrapper">
-            <div className = "inputBoxesWrapper">
+             <div className = "inputBoxesWrapper">
                 <textarea onKeyDown = {handleKeyDown} value ={pythonText} spellCheck = "false" name="python" id="" cols="50" rows="20" onChange={(e)=>{setPythonText(e.target.value); console.log(pythonText)}}></textarea>
             </div>
             <div className = "submitButton">
                 <button onClick = {handleSubmitText}>submit text</button>
+            </div> 
+            <div>
+            <AceEditor
+                placeholder="Python code here"
+                mode="python"
+                theme="monokai"
+                fontSize={14}
+                showPrintMargin={true}
+                showGutter={true}
+                highlightActiveLine={true}
+                value={aceValue}
+                onChange = {handleAceChange}
+                setOptions={{
+                enableBasicAutocompletion: false,
+                enableLiveAutocompletion: false,
+                enableSnippets: false,
+                showLineNumbers: true,
+                tabSize: 4,
+                }}/>
+                <button onClick={handleCodeSubmit}>
+                    submit code
+                </button>
+           
             </div>
-            {
-                dis["name"] === "" ? (
-                    <h1></h1>
-                ) : (
-                    <div className = "lastSearch">
-                        <h1>Last search : {dis["name"]} , {dis["ins"]}</h1>
-                    </div>
-                )
-            }
 
         </div>
     )

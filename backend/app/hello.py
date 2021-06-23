@@ -48,4 +48,28 @@ def pythonText():
     exec(open("./text.py").read())
 
     # n return
-    return 'a'
+    return "a"
+
+
+@app.route('/aceValue', methods=['POST'])
+def aceValue():
+    ans = request.get_json()['text']
+    print("-------------")
+    funHeader = "def runScript():"
+    entireScirpt = funHeader + "\n" + indentLines(ans)
+    exec(entireScirpt, globals())
+    resultFromScript = runScript()
+    print(resultFromScript)
+    return {'result':resultFromScript}
+
+
+
+def indentLines(sample):
+    segments = str.splitlines(sample)
+    result = ""
+    for each in segments:
+        each = "    " + each + "\n"
+        result = result + each
+    return result
+
+

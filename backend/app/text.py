@@ -1,3 +1,3 @@
 def temp():
-    print(1+1)
-    return 2334
+    for i in range(4):
+        print(i)
