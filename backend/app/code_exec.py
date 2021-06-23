@@ -4,23 +4,13 @@ import os
 import pandas as pd
 import csv
 app = Flask(__name__)
+sheets = {}
 spreads = []
 develops = []
 #def select(l, r):
  #   if len(spreads > 0) and (l < len(spreads)) and (l >= 0) and (r < len(spreads[0])) and (r >=0):
   #      develops = spreads[]
-def add_row(dic):
-    with open('spreadsheet.csv', mode='a', newline="") as csv_file:
-        fieldnames = []
-        for key in dic:
-            fieldnames.append(key)
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        file_path = 'spreadsheet.csv'
-        # check if size of file is 0
-        if os.path.getsize(file_path) == 0:
-            writer.writeheader()
-        writer.writerow(dic)
-def add_rowssec(dic):
+def add_rowa(dic):
     field= []
     row = []
     for key in dic:
@@ -30,7 +20,7 @@ def add_rowssec(dic):
         spreads.append(field)
     spreads.append(row)
 
-def query(attr, value):
+def querya(attr, value):
     if (len(spreads) == 0):
         return 'not'
     index_f = 0
@@ -45,7 +35,7 @@ def query(attr, value):
         return 'done'
     else:
         return 'not'
-def pop_row(attr, value):
+def pop_rowa(attr, value):
     if (len(spreads) == 0):
         return 'not'
     index_f = 0
@@ -60,6 +50,49 @@ def pop_row(attr, value):
         return 'done'
     else:
         return 'not'
+def add_sheet(s_name):
+    new_sheet = []
+    sheets[s_name] = new_sheet
+def add_row(dic, s_name):
+    field= []
+    row = []
+    for key in dic:
+        field.append(key)
+        row.append(dic[key])
+    if (len(sheets[s_name]) == 0):
+        sheets[s_name].append(field)
+    sheets[s_name].append(row)
+
+def query(attr, value, s_name):
+    if (len(sheets[s_name]) == 0):
+        return 'not'
+    index_f = 0
+    found = 0
+    for count, a in enumerate(sheets[s_name][0]):
+        if a == attr:
+            index_f = count
+    for i, row in enumerate(sheets[s_name][1:]):
+        if row[index_f] == value:
+            develops.append(i+1)
+    if found == 1:
+        return 'done'
+    else:
+        return 'not'
+def pop_row(attr, value, s_name):
+    if (len(sheets[s_name]) == 0):
+        return 'not'
+    index_f = 0
+    found = 0
+    for count, a in enumerate(sheets[s_name][0]):
+        if a == attr:
+            index_f = count
+    for i, row in enumerate(sheets[s_name][1:]):
+        if row[index_f] == value:
+            sheets[s_name].pop(i+1)
+    if found == 1:
+        return 'done'
+    else:
+        return 'not'
     
 def run_text_as_code(loc):
     exec(loc)
@@ -68,3 +101,10 @@ def aba():
     ans = request.get_json()
     run_text_as_code(ans['text'])
     print(spreads)
+
+@app.route('/aceValue', methods=['POST'])
+def getarray():
+    ans = request.get_json()['text']
+    run_text_as_code(ans)
+    #assume we want resultFromScript
+    return {'result':spreads}

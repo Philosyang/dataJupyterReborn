@@ -72,7 +72,15 @@ export default function StepOneInput(props) {
             return results
         }).then((response)=>{
             var result = response["result"]
-            setResultFromPython(result)
+            var out = []
+            for (let i = 0; i < result.length; i++) {
+                out[i] = []
+                for (let j = 0; j < result[i].length; j++) {
+                    out[i][j] = { value: result[i][j] }
+                }
+            }
+              
+            setResultFromPython(out)
         })
     }
 

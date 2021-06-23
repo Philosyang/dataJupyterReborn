@@ -2,52 +2,6 @@ from flask import Flask, json, jsonify, request
 import os
 app = Flask(__name__)
 
-spreads = []
-develops = []
-#def select(l, r):
- #   if len(spreads > 0) and (l < len(spreads)) and (l >= 0) and (r < len(spreads[0])) and (r >=0):
-  #      develops = spreads[]
-def add_rowssec(dic):
-    field= []
-    row = []
-    for key in dic:
-        field.append(key)
-        row.append(dic[key])
-    if (len(spreads) == 0):
-        spreads.append(field)
-    spreads.append(row)
-
-def query(attr, value):
-    if (len(spreads) == 0):
-        return 'not'
-    index_f = 0
-    found = 0
-    for count, a in enumerate(spreads[0]):
-        if a == attr:
-            index_f = count
-    for i, row in enumerate(spreads[1:]):
-        if row[index_f] == value:
-            develops.append(i+1)
-    if found == 1:
-        return 'done'
-    else:
-        return 'not'
-def pop_row(attr, value):
-    if (len(spreads) == 0):
-        return 'not'
-    index_f = 0
-    found = 0
-    for count, a in enumerate(spreads[0]):
-        if a == attr:
-            index_f = count
-    for i, row in enumerate(spreads[1:]):
-        if row[index_f] == value:
-            spreads.pop(i+1)
-    if found == 1:
-        return 'done'
-    else:
-        return 'not'
-#####################################
 @app.route('/')  # landing page
 def home():
     ans = jsonify("Home")
