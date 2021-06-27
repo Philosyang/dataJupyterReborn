@@ -30,5 +30,7 @@ def getAllSheets():
 def update():
     received_text = request.get_json()['text']    # get text from frontend
     print(received_text)
-    # TODO
+    # TODO what's the format of the received_text?
     return 'a'
+
+# if user uses code instead of editing on the table, adapt Jiaming's code
