@@ -1,3 +1,2 @@
 def temp():
-    for i in range(4):
-        print(i)
+    print(1+1)
