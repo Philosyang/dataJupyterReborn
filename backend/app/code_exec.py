@@ -7,6 +7,15 @@ app = Flask(__name__)
 sheets = {}
 spreads = []
 develops = []
+#var initv = []
+#    for (let i = 0; i < 1000; i++) {
+#        initv.append([])
+#        for (let j = 0; j < 26; i++) {
+#            initv[i].append({value:0})
+#        }
+#    }
+
+
 #def select(l, r):
  #   if len(spreads > 0) and (l < len(spreads)) and (l >= 0) and (r < len(spreads[0])) and (r >=0):
   #      develops = spreads[]
@@ -93,7 +102,8 @@ def pop_row(attr, value, s_name):
         return 'done'
     else:
         return 'not'
-    
+def pop_sheet(s_name):
+    sheets.pop(s_name)
 def run_text_as_code(loc):
     exec(loc)
 @app.route('/pythonText', methods=['POST'])
