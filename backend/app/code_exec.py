@@ -149,17 +149,17 @@ def getarray():
     #assume we want resultFromScript
     return {'result':sheets, 'terminal':message}
 
-#@app.route('/cellChange', methods=['POST'])
-#def cellChange():
-#    ans = request.get_json()['text']
-#    # print(ans)  # sheet_name, location, value; WARN: assuming `ans` as python dictionary
-#
-#    this_sheet_name = ans[sheet_name]
-#    this_location = ans[location]
-#    this_value = ans[value]
-#
-#    this_sheet = sheets[this_sheet_name]    # get sheet
-#    this_sheet[this_location[0]-1][this_location[1]-1] = this_value # update value
-#    sheets[this_sheet_name] = this_sheet    # update sheet
-#
-#    return {'result':spreads}
+@app.route('/cellChange', methods=['POST'])
+def cellChange():
+   ans = request.get_json()['text']
+   # print(ans)  # sheet_name, location, value; WARN: assuming `ans` as python dictionary
+
+   this_sheet_name = ans[sheet_name]
+   this_location = ans[location]
+   this_value = ans[value]
+
+   this_sheet = sheets[this_sheet_name]    # get sheet
+   this_sheet[this_location[0]-1][this_location[1]-1] = this_value # update value
+   sheets[this_sheet_name] = this_sheet    # update sheet
+
+   return sheets
