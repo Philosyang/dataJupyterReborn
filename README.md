@@ -19,13 +19,13 @@ go to `.\backend\app\`
 citing from: https://flask.palletsprojects.com/en/rtd/cli/
 ### for bash / mac
 ```
-export FLASK_APP=hello
+export FLASK_APP=code_exec
 export FLASK_ENV=development
 flask run
 ```
 ### for powershell
 ```
-$env:FLASK_APP = "hello"
+$env:FLASK_APP = "code_exec"
 $env:FLASK_ENV = "development"
 python -m flask run
 ```
