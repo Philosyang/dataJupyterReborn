@@ -21,3 +21,22 @@
     border-radius: 10px;
     padding-left: 40px;
 }
+
+.submitCode{
+    position: relative;
+    top: 10px;
+    padding: 10px;
+    left: 400px
+}
+
+.editorWrapper {
+    position: absolute;
+    top: 0;
+    
+    padding: 10px;
+    padding-top: 50px;
+    padding-right: 50px;
+    padding-bottom: 60px;
+    background-color: cadetblue;
+    
+}

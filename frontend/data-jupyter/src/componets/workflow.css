@@ -21,8 +21,10 @@
 
 .inputArea {
     position: absolute;
+    height: 100%;
+    top: 0%;
+    bottom: 0%;
     left:67.5%;
-    top: 20px;
     right : 1.5%
 }
 

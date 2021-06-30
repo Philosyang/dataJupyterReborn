@@ -5,17 +5,14 @@ import StepOneDisplay from "./eachSteps/step1/stepOneDisplay"
 import ReactDataSheet from 'react-datasheet';
 // Be sure to include styles at some point, probably during your bootstrapping
 import 'react-datasheet/lib/react-datasheet.css';
-
+import SpreadSheet from "./spreadSheet";
 
 
 export default function WorkFlow() {
 
 
     const [spreadSheetData, setSpreadSheetData] = useState()
-    const [grid, setgrid] = useState([
-        [{ value: 1 }, { value: 3 }],
-        [{ value: 2 }, { value: 4 }],
-      ])
+    const [grid, setgrid] = useState([[],[]])
     
 
 
@@ -35,8 +32,8 @@ export default function WorkFlow() {
                    <h1 style= {{paddingTop : "5px", paddingBottom: "5px"}}>Result</h1>
                 </div>
 
-                <StepOneDisplay data = {spreadSheetData}/>
-                <ReactDataSheet
+                <SpreadSheet data= {grid}/>
+                {/* <ReactDataSheet
                     data={grid}
                     valueRenderer={cell => cell.value}
                     onCellsChanged={changes => {
@@ -46,7 +43,7 @@ export default function WorkFlow() {
                     });
                     setgrid({ gridy });
                     }}
-                />
+                /> */}
             </div>
             <div className = "dividingStick">
                
