@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 # global variables
 all_sheets = {}
-width, height = 26, 1000
+width, height = 26, 200
 
 def newSheet(new_sheet_name):
     current_sheet = [[None for x in range(width)] for y in range(height)]   # create 2d list new sheet
