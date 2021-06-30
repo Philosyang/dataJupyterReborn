@@ -2,7 +2,14 @@ from flask import Flask, json, jsonify, request
 import requests
 import os
 import pandas as pd
+from io import StringIO 
+import sys
+from os import write 
+import sys, traceback
 import csv
+from contextlib import redirect_stdout
+import io
+
 app = Flask(__name__)
 sheets = {}
 spreads = []
@@ -102,10 +109,27 @@ def pop_row(attr, value, s_name):
         return 'done'
     else:
         return 'not'
+
 def pop_sheet(s_name):
     sheets.pop(s_name)
 def run_text_as_code(loc):
-    exec(loc)
+    try:
+        with io.StringIO() as buf, redirect_stdout(buf):
+            exec(loc)
+            output = buf.getvalue()
+        return output
+    except Exception as e:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        trace_back = traceback.extract_tb(exc_traceback)
+        stack_trace = list()
+
+        for trace in trace_back:
+            stack_trace.append("File : %s , Line : %d, Func.Name : %s, Message : %s" % (trace[0], trace[1], trace[2], trace[3]))
+        s = "Exception type : %s " % exc_type.__name__
+        d = "Exception message : %s" %exc_value
+        f = "Stack trace : %s" %stack_trace
+        out = s + '\n' + d + '\n' + f
+        return out
 @app.route('/pythonText', methods=['POST'])
 def aba():
     ans = request.get_json()
@@ -115,6 +139,7 @@ def aba():
 @app.route('/aceValue', methods=['POST'])
 def getarray():
     ans = request.get_json()['text']
-    run_text_as_code(ans)
+    message = run_text_as_code(ans)
+    print(message)
     #assume we want resultFromScript
-    return {'result':spreads}
+    return {'result':sheets, 'terminal':message}
