@@ -1,0 +1,15 @@
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th, td {
+    min-width: 100px;
+}
+
+.sheets {
+    position: absolute;
+    width: 100%;
+    overflow: scroll;
+    height: 1000px;
+}

@@ -86,13 +86,8 @@ export default function StepOneInput(props) {
 
     return(                                                                     
         <div className = "StepOneInputWrapper">
-             <div className = "inputBoxesWrapper">
-                <textarea onKeyDown = {handleKeyDown} value ={pythonText} spellCheck = "false" name="python" id="" cols="50" rows="20" onChange={(e)=>{setPythonText(e.target.value); console.log(pythonText)}}></textarea>
-            </div>
-            <div className = "submitButton">
-                <button onClick = {handleSubmitText}>submit text</button>
-            </div> 
-            <div>
+
+            <div className="editorWrapper">
             <AceEditor
                 placeholder="Python code here"
                 mode="python"
@@ -110,7 +105,7 @@ export default function StepOneInput(props) {
                 showLineNumbers: true,
                 tabSize: 4,
                 }}/>
-                <button onClick={handleCodeSubmit}>
+                <button className="submitCode" onClick={handleCodeSubmit}>
                     submit code
                 </button>
            
