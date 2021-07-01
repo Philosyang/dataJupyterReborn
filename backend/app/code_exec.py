@@ -1,7 +1,7 @@
 from flask import Flask, json, jsonify, request
 import requests
 import os
-import pandas as pd
+#import pandas as pd
 from io import StringIO 
 import sys
 from os import write 
