@@ -47,9 +47,6 @@ export default function StepOneInput(props) {
 
 
     useEffect(()=>{
-        resultFromPython.forEach((item)=>{
-            console.log(item)
-        })
         props.passData(resultFromPython)
     },[resultFromPython])
 
@@ -72,15 +69,8 @@ export default function StepOneInput(props) {
             return results
         }).then((response)=>{
             var result = response["result"]
-            var out = []
-            for (let i = 0; i < result.length; i++) {
-                out[i] = []
-                for (let j = 0; j < result[i].length; j++) {
-                    out[i][j] = { value: result[i][j] }
-                }
-            }
               
-            setResultFromPython(out)
+            setResultFromPython(result)
         })
     }
 

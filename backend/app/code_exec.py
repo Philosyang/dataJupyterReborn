@@ -145,7 +145,7 @@ def aba():
 def getarray():
     ans = request.get_json()['text']
     message = run_text_as_code(ans)
-    print(message)
+    print(sheets)
     #assume we want resultFromScript
     return {'result':sheets, 'terminal':message}
 
