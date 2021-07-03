@@ -4,7 +4,7 @@ import os
 #import pandas as pd
 from io import StringIO 
 import sys
-from os import write 
+from os import write
 import sys, traceback
 import csv
 from contextlib import redirect_stdout
@@ -12,6 +12,16 @@ import io
 #import mysql.connector
 from mysql.connector import connect, Error, connection
 import signal
+from flask_mysqldb import MySQL # database connection
+
+app = Flask(__name__)
+
+app.config['MYSQL_HOST'] = '127.0.0.1'  # we are using a public github repo
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'lol'
+app.config['MYSQL_PORT'] = 3306
+app.config['MYSQL_DB'] = 'dataJupyter'
+mysql = MySQL(app)
 
 sheets = {}
 spreads = []
@@ -178,17 +188,23 @@ def getarray():
     #assume we want resultFromScript
     return {'result':sheets, 'terminal':message}
 
-#@app.route('/cellChange', methods=['POST'])
-#def cellChange():
-#   ans = request.get_json()['text']
-#   # print(ans)  # sheet_name, location, value; WARN: assuming `ans` as python dictionary
-#
-#   this_sheet_name = ans[sheet_name]
-#   this_location = ans[location]
-#   this_value = ans[value]
-#
-#   this_sheet = sheets[this_sheet_name]    # get sheet
-#   this_sheet[this_location[0]-1][this_location[1]-1] = this_value # update value
-#   sheets[this_sheet_name] = this_sheet    # update sheet
-#
-#   return sheets
+@app.route('/cellChange', methods=['POST'])
+def cellChange():
+   ans = request.get_json()['text']
+   # print(ans)  # sheet_name, location, value; WARN: assuming `ans` as python dictionary
+
+   this_sheet_name = ans[sheet_name]
+   this_location = ans[location]
+   this_value = ans[value]
+
+   this_sheet = sheets[this_sheet_name]    # get sheet
+   this_sheet[this_location[0]-1][this_location[1]-1] = this_value # update value
+   sheets[this_sheet_name] = this_sheet    # update sheet
+
+   return sheets
+
+@app.route('/commit', methods=['POST'])
+def commitToDatabase():
+   
+
+   return sheets
