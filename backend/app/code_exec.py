@@ -36,31 +36,26 @@ develops = []
  #   if len(spreads > 0) and (l < len(spreads)) and (l >= 0) and (r < len(spreads[0])) and (r >=0):
   #      develops = spreads[]
 
-def add_rowa(dic):
-    field= []
-    row = []
-    for key in dic:
-        field.append(key)
-        row.append(dic[key])
-    if (len(spreads) == 0):
-        spreads.append(field)
-    spreads.append(row)
 
-def querya(attr, value):
-    if (len(spreads) == 0):
-        return 'not'
-    index_f = 0
-    found = 0
-    for count, a in enumerate(spreads[0]):
-        if a == attr:
-            index_f = count
-    for i, row in enumerate(spreads[1:]):
-        if row[index_f] == value:
-            develops.append(i+1)
-    if found == 1:
-        return 'done'
-    else:
-        return 'not'
+def get_array_from_table(tablename):
+    show_table_query = "DESCRIBE %s", tablename
+    cursor = mysql.connection.cursor()
+    cursor.execute(show_table_query)
+    # Fetch rows from last executed query
+    result = cursor.fetchall()
+    new_table = []
+    new_fieldname = []
+
+    for row in result:
+        new_fieldname.append(row[0])
+    select  = 'SELECT * FROM %s', tablename
+    cursor.execute(select)
+    # Fetch rows from last executed query
+    for row in cursor.fetchall():
+        new_table.append(list(row))
+    sheets[tablename] = new_table
+
+        
 def drop_table(name):
     cur = mysql.connection.cursor()
     drop = "DROP TABLE %s", name
@@ -94,25 +89,10 @@ def array_to_db(array, name):
 
 
     
-def pop_rowa(attr, value):
-    if (len(spreads) == 0):
-        return 'not'
-    index_f = 0
-    found = 0
-    for count, a in enumerate(spreads[0]):
-        if a == attr:
-            index_f = count
-    for i, row in enumerate(spreads[1:]):
-        if row[index_f] == value:
-            spreads.pop(i+1)
-    if found == 1:
-        return 'done'
-    else:
-        return 'not'
-
 def add_sheet(s_name):
     new_sheet = []
-    sheets[s_name] = new_sheet
+    field_name = []
+    sheets[s_name] = (new_sheet, field_name)
 def add_row(dic, s_name):
     field= []
     row = []
