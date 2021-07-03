@@ -9,12 +9,40 @@ import sys, traceback
 import csv
 from contextlib import redirect_stdout
 import io
-
-app = Flask(__name__)
+#import mysql.connector
+from mysql.connector import connect, Error, connection
+import signal
 
 sheets = {}
 spreads = []
 develops = []
+sheetnames = []
+app = Flask(__name__)
+try:
+    db = connect(
+    host="localhost",
+    user="root",
+    password="375120", #need to be changed according to your default mysql account
+    database="datajupyter"
+    )
+    db_Info = db.get_server_info()
+    print("Connected to MySQL Server version ", db_Info)
+    cursor = db.cursor()
+    cursor.execute("select database();")
+    record = cursor.fetchone()
+    print("You're connected to database: ", record)
+
+except Error as e:
+    print("Error while connecting to MySQL", e) # needs to be printed to the console
+def signal_handler(sig, frame):
+    if db.is_connected():
+        cursor.close()
+        db.close()
+        print("MySQL connection is closed")
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
 #var initv = []
 #    for (let i = 0; i < 1000; i++) {
 #        initv.append([])
@@ -72,6 +100,7 @@ def pop_rowa(attr, value):
 
 def add_sheet(s_name):
     new_sheet = []
+    sheetnames.append(s_name)
     sheets[s_name] = new_sheet
 def add_row(dic, s_name):
     field= []
@@ -149,17 +178,17 @@ def getarray():
     #assume we want resultFromScript
     return {'result':sheets, 'terminal':message}
 
-@app.route('/cellChange', methods=['POST'])
-def cellChange():
-   ans = request.get_json()['text']
-   # print(ans)  # sheet_name, location, value; WARN: assuming `ans` as python dictionary
-
-   this_sheet_name = ans[sheet_name]
-   this_location = ans[location]
-   this_value = ans[value]
-
-   this_sheet = sheets[this_sheet_name]    # get sheet
-   this_sheet[this_location[0]-1][this_location[1]-1] = this_value # update value
-   sheets[this_sheet_name] = this_sheet    # update sheet
-
-   return sheets
+#@app.route('/cellChange', methods=['POST'])
+#def cellChange():
+#   ans = request.get_json()['text']
+#   # print(ans)  # sheet_name, location, value; WARN: assuming `ans` as python dictionary
+#
+#   this_sheet_name = ans[sheet_name]
+#   this_location = ans[location]
+#   this_value = ans[value]
+#
+#   this_sheet = sheets[this_sheet_name]    # get sheet
+#   this_sheet[this_location[0]-1][this_location[1]-1] = this_value # update value
+#   sheets[this_sheet_name] = this_sheet    # update sheet
+#
+#   return sheets
