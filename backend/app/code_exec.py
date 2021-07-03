@@ -2,15 +2,23 @@ from flask import Flask, json, jsonify, request
 import requests
 import os
 import pandas as pd
-from io import StringIO 
+from io import StringIO
 import sys
-from os import write 
+from os import write
 import sys, traceback
 import csv
 from contextlib import redirect_stdout
 import io
+from flask_mysqldb import MySQL # database connection
 
 app = Flask(__name__)
+
+app.config['MYSQL_HOST'] = '127.0.0.1'  # we are using a public github repo
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'lol'
+app.config['MYSQL_PORT'] = 3306
+app.config['MYSQL_DB'] = 'dataJupyter'
+mysql = MySQL(app)
 
 sheets = {}
 spreads = []
@@ -161,5 +169,11 @@ def cellChange():
    this_sheet = sheets[this_sheet_name]    # get sheet
    this_sheet[this_location[0]-1][this_location[1]-1] = this_value # update value
    sheets[this_sheet_name] = this_sheet    # update sheet
+
+   return sheets
+
+@app.route('/commit', methods=['POST'])
+def commitToDatabase():
+   
 
    return sheets
