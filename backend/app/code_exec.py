@@ -1,17 +1,14 @@
 from flask import Flask, json, jsonify, request
 import requests
 import os
-#import pandas as pd
-from io import StringIO 
+import pandas as pd
+from io import StringIO
 import sys
 from os import write
 import sys, traceback
 import csv
 from contextlib import redirect_stdout
 import io
-#import mysql.connector
-from mysql.connector import connect, Error, connection
-import signal
 from flask_mysqldb import MySQL # database connection
 
 app = Flask(__name__)
@@ -22,37 +19,10 @@ app.config['MYSQL_PASSWORD'] = 'lol'
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_DB'] = 'dataJupyter'
 mysql = MySQL(app)
-
+tablenames = []
 sheets = {}
 spreads = []
 develops = []
-sheetnames = []
-app = Flask(__name__)
-try:
-    db = connect(
-    host="localhost",
-    user="root",
-    password="375120", #need to be changed according to your default mysql account
-    database="datajupyter"
-    )
-    db_Info = db.get_server_info()
-    print("Connected to MySQL Server version ", db_Info)
-    cursor = db.cursor()
-    cursor.execute("select database();")
-    record = cursor.fetchone()
-    print("You're connected to database: ", record)
-
-except Error as e:
-    print("Error while connecting to MySQL", e) # needs to be printed to the console
-def signal_handler(sig, frame):
-    if db.is_connected():
-        cursor.close()
-        db.close()
-        print("MySQL connection is closed")
-    sys.exit(0)
-
-signal.signal(signal.SIGINT, signal_handler)
-
 #var initv = []
 #    for (let i = 0; i < 1000; i++) {
 #        initv.append([])
@@ -91,7 +61,39 @@ def querya(attr, value):
         return 'done'
     else:
         return 'not'
+def drop_table(name):
+    cur = mysql.connection.cursor()
+    drop = "DROP TABLE %s", name
+    cur.execute(drop)
+    cur.close
+    for i, names in enumerate(tablenames):
+        if names == name:
+            tablenames.pop(i)
+            break
+def array_to_db(array, name):
+    for names in tablenames:
+        if names == name:
+            drop_table(name)
+    cur = mysql.connection.cursor()
+    a = "Create Table %s (\n" % name
+    #record_len = len(array[0])
+    #create table with field on the first row
+    for i in array[0]:
+        temp = "%s VARCHAR(255)\n" % i
+        a = a + temp
+    a = a + ")"
+    cur.execute(a)
+    #inserting each row
+    for record in array[1:]:
+        ins = "INSERT INTO %s\nValues (", name
+        for value in record:
+            ins = ins + str(value) + ', '
+        ins = ins + ')'
+        cur.execute(ins)
+    cur.close
 
+
+    
 def pop_rowa(attr, value):
     if (len(spreads) == 0):
         return 'not'
@@ -110,7 +112,6 @@ def pop_rowa(attr, value):
 
 def add_sheet(s_name):
     new_sheet = []
-    sheetnames.append(s_name)
     sheets[s_name] = new_sheet
 def add_row(dic, s_name):
     field= []
