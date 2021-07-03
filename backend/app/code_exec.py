@@ -61,36 +61,54 @@ def querya(attr, value):
         return 'done'
     else:
         return 'not'
+
 def drop_table(name):
+    # drop mysql table
     cur = mysql.connection.cursor()
-    drop = "DROP TABLE %s", name
+    drop = 'DROP TABLE %s;' % name
     cur.execute(drop)
-    cur.close
+    cur.close()
+
+    # drop(update) the table in `tablenames` list as well; `tablenames` is used to keep track of the tables in mysql database
     for i, names in enumerate(tablenames):
         if names == name:
             tablenames.pop(i)
             break
+
 def array_to_db(array, name):
+    # drop old mysql table
     for names in tablenames:
         if names == name:
             drop_table(name)
+
+    # create new table
     cur = mysql.connection.cursor()
-    a = "Create Table %s (\n" % name
-    #record_len = len(array[0])
-    #create table with field on the first row
-    for i in array[0]:
-        temp = "%s VARCHAR(255)\n" % i
-        a = a + temp
-    a = a + ")"
-    cur.execute(a)
+    # #record_len = len(array[0])
+    # #create table with field on the first row
+    # for i in array[0]:
+    #     temp = '%s VARCHAR(255)\n' % i
+    #     a = a + temp
+    # a = a + ")"
+    # cur.execute(a)
+    column_count = len(sheets[name])   # number of columns in current table
+    column_query = ''
+    for i in range(1, column_count):
+        column_query += 'col_%s VARCHAR(255), ' % i
+    column_query += 'col_%s VARCHAR(255)' % column_count
+  
+    query = 'CREATE TABLE %s (%s);' % (name, column_query)
+    cur.execute(query)
+    # https://dev.mysql.com/doc/refman/8.0/en/create-table.html
+    # query example: 'CREATE TABLE sheet2 (col_1 VARCHAR(255), col_2 VARCHAR(255), col_3 VARCHAR(255), col_4 VARCHAR(255));
+
     #inserting each row
     for record in array[1:]:
-        ins = "INSERT INTO %s\nValues (", name
+        ins = 'INSERT INTO %s\nValues (' % name
         for value in record:
             ins = ins + str(value) + ', '
         ins = ins + ')'
         cur.execute(ins)
-    cur.close
+    cur.close()
 
 
     
