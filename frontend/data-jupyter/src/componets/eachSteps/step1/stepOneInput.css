@@ -32,11 +32,35 @@
 .editorWrapper {
     position: relative;
     top: 0;
-    
     padding: 10px;
-    padding-top: 50px;
-    padding-right: 50px;
-    padding-bottom: 60px;
     background-color: cadetblue;
+    z-index: 0;
     
+}
+
+.consoleWrapper{
+    position: fixed;
+    bottom: 0%;
+    height: 180px;
+    right: 0;
+    left: 65.25%;
+    z-index: 20;
+}
+
+.consoleHeader{
+    position:absolute;
+    top: 0;
+    width: 100%;
+    height: 30px;
+    background-color:white;
+    border: 2px solid black;
+}
+
+.consoleText{
+    position: absolute;
+    top: 34px;
+    width: 100%;
+    bottom: 0;
+    background-color: black;
+    color: white;
 }

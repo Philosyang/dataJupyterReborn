@@ -7,3 +7,12 @@
     margin: 10px;
     background-color: lightblue;
 }
+
+.console{
+    position: absolute;
+    height: 50px;
+    bottom: 0px;
+    right: 0;
+    left:0;
+    background-color: aqua;
+}

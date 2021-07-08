@@ -12,6 +12,9 @@ export default function StepOneDisplay(props){
     return(
         <div className = "stepOneDisplayWrapper">
             <SpreadSheet/>
+            <div className = "console">
+
+            </div>
         </div>
     )
 }

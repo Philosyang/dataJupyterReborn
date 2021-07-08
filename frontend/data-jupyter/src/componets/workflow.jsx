@@ -1,12 +1,9 @@
-import {React, useEffect, useState} from "react"
+import {React, useEffect, useState, useRef} from "react"
 import "./workflow.css"
 import StepOneInput from "./eachSteps/step1/stepOneInput"
-import StepOneDisplay from "./eachSteps/step1/stepOneDisplay"
-import ReactDataSheet from 'react-datasheet';
 // Be sure to include styles at some point, probably during your bootstrapping
 import 'react-datasheet/lib/react-datasheet.css';
 import SpreadSheet from "./spreadSheet";
-import sheetSelection from "./sheetSelection";
 
 
 export default function WorkFlow() {
@@ -15,8 +12,19 @@ export default function WorkFlow() {
     const [spreadSheetData, setSpreadSheetData] = useState()
     const [grid, setgrid] = useState([[],[]])
     const [currentSheet, setSheet] = useState("")
-    
+    const [consoleMsg, setConsoleMsg] = useState("")
+    const chilRef = useRef(null)
 
+    var references = {};
+
+    const getOrCreateRef =(id) =>{
+        if (!references.hasOwnProperty(id)) {
+            references[id] = React.createRef(null);
+        }
+        return references[id];
+    }
+    
+    var refArray = []
 
 
     useEffect(()=>{
@@ -62,13 +70,38 @@ export default function WorkFlow() {
                 {Array.from(numBlock).map((x, index) =>  <div>
 
                 </div>)}
-                {Array(numBlock).fill(                <StepOneInput passData = {c => {setgrid(c)}}/>
-)}
+                {/* {Array(numBlock).fill(
+                    <StepOneInput passData = {c => {setgrid(c)}} passMsg = {g =>{setConsoleMsg(g)}}/>
+                )} */}
+                <button onClick={()=>{
+                    console.log(refArray[0])
+                }}>
+                    sumbit all code
+                </button>
+                {Array(numBlock).fill("1").map((e, i)=>{
+                    return(
+                    <div style={{padding: "10px"}}>
+                        <StepOneInput ref = {(i) =>{refArray[i] = i}}  passData = {c => {setgrid(c)}} passMsg = {g =>{setConsoleMsg(g)}} id = {i}/>
+                    </div>
+                    )
+
+                })}
 
                     {/* <div>
                         <StepOneInput passData = {c => {setgrid(c)}}/>
                     </div> */}
-                   
+                <div className = "consoleWrapper">
+                <div className = "consoleHeader">
+                    Console
+                </div>
+                <div className ="consoleText">
+                    {consoleMsg == 1 ? "success": consoleMsg}
+                </div>
+
+            </div>   
+
+
+
                 </div>
 
 
