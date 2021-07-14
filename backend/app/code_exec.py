@@ -162,7 +162,7 @@ def run_text_as_code(loc):
         with io.StringIO() as buf, redirect_stdout(buf):
             exec(loc)
             output = buf.getvalue()
-        return output
+        return [output, "success"]
     except Exception as e:
         exc_type, exc_value, exc_traceback = sys.exc_info()
         trace_back = traceback.extract_tb(exc_traceback)
@@ -174,7 +174,7 @@ def run_text_as_code(loc):
         d = "Exception message : %s" %exc_value
         f = "Stack trace : %s" %stack_trace
         out = s + '\n' + d + '\n' + f
-        return out
+        return [out, "exception"]
 
 @app.route('/aceValue', methods=['POST'])
 def getarray():

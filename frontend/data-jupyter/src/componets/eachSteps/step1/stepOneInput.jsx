@@ -13,14 +13,9 @@ const StepOneInput = forwardRef((props, ref)=>{
         const [name, setName] = useState(props.name)
         const [pythonText, setPythonText] = useState("")
         const [aceValue, setAceValue] = useState("")
-        const [resultFromPython, setResultFromPython] = useState([])
-        const [consoleMsg, setConsoleMsg] = useState("")
+        const [resultFromPython, setResultFromPython] = useState(["",""])
+        const [consoleMsg, setConsoleMsg] = useState({msg:"", status: ""})
 
-        useImperativeHandle(ref, ()=>({
-            refF(){
-                handleCodeSubmit();
-            }
-        }))
     
         useEffect(()=>{
             props.passData(resultFromPython)
@@ -47,14 +42,12 @@ const StepOneInput = forwardRef((props, ref)=>{
                 var result = response["result"]
                 var terminal = response["terminal"]
                 console.log(terminal)
-                setConsoleMsg("Message from code block " + props.id  +" : "+ "\n"+response["terminal"])
+                setConsoleMsg({msg: "Message from code block " + props.id  +" : "+ "\n"+response["terminal"][0], status: response["terminal"][1]})
                 console.log(consoleMsg)
                 setResultFromPython(result)
             })
         }
-        const refFunc = handleCodeSubmit;
-
-        ref.current = refFunc != null ? refFunc : "";
+        ref.current = handleCodeSubmit;
     
         return(                                                                     
             <div className = "StepOneInputWrapper">

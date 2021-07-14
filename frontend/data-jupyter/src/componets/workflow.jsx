@@ -1,4 +1,4 @@
-import {React, useEffect, useState, useRef} from "react"
+import {React, useEffect, useState, useRef, createRef} from "react"
 import "./workflow.css"
 import StepOneInput from "./eachSteps/step1/stepOneInput"
 // Be sure to include styles at some point, probably during your bootstrapping
@@ -12,24 +12,26 @@ export default function WorkFlow() {
     const [spreadSheetData, setSpreadSheetData] = useState()
     const [grid, setgrid] = useState([[],[]])
     const [currentSheet, setSheet] = useState("")
-    const [consoleMsg, setConsoleMsg] = useState("")
-    const chilRef = useRef(null)
+    const [consoleMsg, setConsoleMsg] = useState({})
+    const chilRef =  Array(numBlock).fill(createRef())
 
     var references = {};
-
-    const getOrCreateRef =(id) =>{
-        if (!references.hasOwnProperty(id)) {
-            references[id] = React.createRef(null);
-        }
-        return references[id];
-    }
-    
-    var refArray = []
 
 
     useEffect(()=>{
         console.log(spreadSheetData)
     },[spreadSheetData])
+
+
+    const callChildRef = () => {
+        chilRef.every((element, index)=>{
+            element.current();
+            if(consoleMsg["status"] === "exception") {
+                return false
+            }
+        })
+    }
+
 
 
 
@@ -73,15 +75,13 @@ export default function WorkFlow() {
                 {/* {Array(numBlock).fill(
                     <StepOneInput passData = {c => {setgrid(c)}} passMsg = {g =>{setConsoleMsg(g)}}/>
                 )} */}
-                <button onClick={()=>{
-                    console.log(refArray[0])
-                }}>
+                <button onClick={callChildRef}>
                     sumbit all code
                 </button>
                 {Array(numBlock).fill("1").map((e, i)=>{
                     return(
                     <div style={{padding: "10px"}}>
-                        <StepOneInput ref = {(i) =>{refArray[i] = i}}  passData = {c => {setgrid(c)}} passMsg = {g =>{setConsoleMsg(g)}} id = {i}/>
+                        <StepOneInput ref = {chilRef[i]}  passData = {c => {setgrid(c)}} passMsg = {g =>{setConsoleMsg(g)}} id = {i}/>
                     </div>
                     )
 
@@ -95,7 +95,7 @@ export default function WorkFlow() {
                     Console
                 </div>
                 <div className ="consoleText">
-                    {consoleMsg == 1 ? "success": consoleMsg}
+                    {consoleMsg == 1 ? "success": consoleMsg["msg"]}
                 </div>
 
             </div>   
