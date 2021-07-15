@@ -110,7 +110,10 @@ def array_to_db(array, name):
 
 # new we provide both sheets name and fields in order to add sheet
 def add_sheet(s_name, field_name):
-    sheets[s_name] = [field_name]
+    emptySheet = [["" for i in range(26)] for x in range(200)]
+    length = len(field_name)
+    emptySheet[0][0:length] = field_name
+    sheets[s_name] = emptySheet
 def add_row(dic, s_name):
     #field= []
     row = []
@@ -187,10 +190,10 @@ def cellChange():
    ans = request.get_json()['text']
    # print(ans)  # sheet_name, location, value; WARN: assuming `ans` as python dictionary
 
-   this_sheet_name = ans[sheet_name]
-   this_location = ans[location]
-   this_value = ans[value]
-
+   this_sheet_name = ans["sheet_name"]
+   this_location = ans["location"]
+   this_value = ans["value"]
+   print(this_sheet_name)
    this_sheet = sheets[this_sheet_name]    # get sheet
    this_sheet[this_location[0]-1][this_location[1]-1] = this_value # update value
    sheets[this_sheet_name] = this_sheet    # update sheet

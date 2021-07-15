@@ -19,7 +19,6 @@ const StepOneInput = forwardRef((props, ref)=>{
     
         useEffect(()=>{
             props.passData(resultFromPython)
-            props.passMsg(consoleMsg)
         },[resultFromPython])
         
         const handleAceChange = (e) =>{
@@ -27,7 +26,7 @@ const StepOneInput = forwardRef((props, ref)=>{
         }
     
         const handleCodeSubmit = () =>{
-            console.log(aceValue)
+            console.log(props.id)
             var data = {text:aceValue}
             fetch("/aceValue", {
                 body: JSON.stringify(data),
@@ -41,9 +40,7 @@ const StepOneInput = forwardRef((props, ref)=>{
             }).then((response)=>{
                 var result = response["result"]
                 var terminal = response["terminal"]
-                console.log(terminal)
                 setConsoleMsg({msg: "Message from code block " + props.id  +" : "+ "\n"+response["terminal"][0], status: response["terminal"][1]})
-                console.log(consoleMsg)
                 setResultFromPython(result)
             })
         }
@@ -79,7 +76,9 @@ const StepOneInput = forwardRef((props, ref)=>{
                     showLineNumbers: true,
                     tabSize: 4,
                     }}/>
-    
+                <div style = {{backgroundColor:"black", maxHeight:"200px", width:"500px", color:"white"}}>
+                    {consoleMsg["msg"]}
+                </div>
                
                 </div>  
             </div>
