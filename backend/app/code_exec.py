@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = '127.0.0.1'  # we are using a public github repo
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'lol'
+app.config['MYSQL_PASSWORD'] = '375120'
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_DB'] = 'dataJupyter'
 mysql = MySQL(app)
@@ -109,9 +109,12 @@ def array_to_db(array, name):
 
 
 # new we provide both sheets name and fields in order to add sheet
-def add_sheet(s_name, field_name):
+def add_sheet(s_name):
     new_sheet = []
-    field_name = []
+
+    sheets[s_name] = new_sheet
+def add_sheet1(s_name, field_name):
+    new_sheet = []
     sheets[s_name] = (new_sheet, field_name)
 def add_row(dic, s_name):
     #field= []
