@@ -109,18 +109,8 @@ def array_to_db(array, name):
 
 
 # new we provide both sheets name and fields in order to add sheet
-<<<<<<< HEAD
-def add_sheet(s_name):
-    new_sheet = []
-
-    sheets[s_name] = new_sheet
-def add_sheet1(s_name, field_name):
-    new_sheet = []
-    sheets[s_name] = (new_sheet, field_name)
-=======
 def add_sheet(s_name, field_name):
     sheets[s_name] = [field_name]
->>>>>>> 13a69f6f592c6c3418a7dabb66d1b00a24194514
 def add_row(dic, s_name):
     #field= []
     row = []
