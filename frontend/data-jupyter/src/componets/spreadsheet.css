@@ -13,3 +13,14 @@ th, td {
     overflow: scroll;
     height: 1000px;
 }
+
+input {
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+td {
+    padding: 0;
+    text-align: center;
+}
+

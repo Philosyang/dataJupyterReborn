@@ -1,5 +1,8 @@
 import React, {useState, useEffect} from "react"
+import TableCell from "./tableCell"
 import "./spreadsheet.css"
+import { Table } from "@material-ui/core"
+import Cell from "./cell"
 
 export default function SpreadSheet(props){
     const [sheetValue, setSheetValue] = useState(emptySheet)
@@ -79,7 +82,7 @@ export default function SpreadSheet(props){
                         item = [index+1].concat(item)
                         return <tr>
                             {item.map((element, is)=>{
-                                return <td onClick={(e)=>{console.log(e.target.textContent)}} id = {index+1 + "," + is }>{element}</td>
+                                return <td onClick={(e)=>{console.log(e.target.textContent)}} id = {index+1 + "," + is }>  <Cell  location = {[index+1,is]} sheet = {sheet}  value = {element}/> </td>
                             })}
                         </tr>
                     })}
