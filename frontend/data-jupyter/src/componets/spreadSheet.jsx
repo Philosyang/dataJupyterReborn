@@ -13,8 +13,17 @@ export default function SpreadSheet(props){
     
     const[k, setK] = useState(emptySheet)
 
+    const [py, setPy] = useState("")
+
     var data = props.data
     var sheet = props.sheet
+
+    useEffect(()=>{
+        if(props.sheet != "") {
+            props.passPy(py)
+        }
+
+    },[py])
 
     useEffect(()=>{
         handle()
@@ -29,9 +38,7 @@ export default function SpreadSheet(props){
 
     const handle=()=>{
         if(data != {} ){
-            console.log(data)
-            console.log(sheet)
-            console.log(data[sheet])
+
             var first = data[sheet]
             if(first != undefined){
                 for(var i = 0; i < first.length; i++) {
@@ -39,33 +46,11 @@ export default function SpreadSheet(props){
                         emptySheet[i][j] = first[i][j]
                     }
                 }
-                console.log(emptySheet)
                 setK(emptySheet)
             }
         }
         
-        // if(data[fisrt][0] != undefined) {
-        //     var datas = data[first][0]
-        //     for(var i = 0; i < datas.length; i++) {
-        //         for(var j = 0; j < datas[i].length; j++) {
-        //             emptySheet[i][j] = datas[i][j]
-        //         }
-        
-        //     }  
-        // }
-        // console.log("first is " + first)
-        // console.log("the next line is data[first]")
-        // console.log(data[first])
-        // var datas = data[first]
-        // for(var i = 0; i < datas[i]; i++) {
-        //     for(var j = 0; j < data[i][j].length; j++) {
-        //         emptySheet[i][j] = data[i][j]
-        //     }
-    
-        // }
-        // console.log("result is" + emptySheet)
-   
-        // setK(emptySheet)
+
     }
 
     return(
@@ -82,7 +67,7 @@ export default function SpreadSheet(props){
                         item = [index+1].concat(item)
                         return <tr>
                             {item.map((element, is)=>{
-                                return <td onClick={(e)=>{console.log(e.target.textContent)}} id = {index+1 + "," + is }>  <Cell  location = {[index+1,is]} sheet = {sheet}  value = {element}/> </td>
+                                return <td id = {index+1 + "," + is }>  <Cell  location = {[index+1,is]} sheet = {sheet}  value = {element} sheetName = {sheet} pyChange = {(s)=>{setPy(s)}}/> </td>
                             })}
                         </tr>
                     })}

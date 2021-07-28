@@ -10,8 +10,6 @@ import ace from "react-ace";
 
 const StepOneInput = forwardRef((props, ref)=>{
     {
-        const [name, setName] = useState(props.name)
-        const [pythonText, setPythonText] = useState("")
         const [aceValue, setAceValue] = useState("")
         const [resultFromPython, setResultFromPython] = useState(["",""])
         const [consoleMsg, setConsoleMsg] = useState({msg:"", status: ""})
@@ -24,6 +22,10 @@ const StepOneInput = forwardRef((props, ref)=>{
         const handleAceChange = (e) =>{
             setAceValue(e)
         }
+
+        useEffect(()=>{
+            setAceValue(props.initial)
+        },[])
     
         const handleCodeSubmit = () =>{
             console.log(props.id)
