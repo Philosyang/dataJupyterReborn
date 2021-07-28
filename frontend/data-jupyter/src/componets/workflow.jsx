@@ -16,6 +16,7 @@ export default function WorkFlow() {
     const [currentSheet, setSheet] = useState("")
     const [consoleMsg, setConsoleMsg] = useState({})
     const chilRef =  Array(numBlock).fill(useRef())
+    const [Pys, setPys] = useState({})
 
 
 
@@ -43,8 +44,18 @@ export default function WorkFlow() {
       })
     }
 
+    const initialVal = (i) =>{
+        if(i === 2) {
+            console.log(i.toString())
+            console.log(Object.keys(Pys))
+            console.log(Object.keys(Pys).includes( i.toString()))
+        }
+    }
 
 
+    useEffect(()=>{
+        // console.log(Pys)
+    },[Object.keys(Pys).length])
 
     var trys = Object.keys(grid)
 
@@ -61,7 +72,7 @@ export default function WorkFlow() {
                    <h1 style= {{paddingTop : "5px", paddingBottom: "5px"}}>Result</h1>
                 </div>
                 <button onClick = {()=>{console.log(arrayToGrid(grid[currentSheet]))}}>s</button>
-                <SpreadSheet data= {grid} sheet = {currentSheet} />
+                <SpreadSheet  passPy = {c => {var obj = Pys; obj[numBlock] = c  ;setPys(obj); setNumBlock(numBlock+1);console.log(c); console.log(numBlock) }} data= {grid} sheet = {currentSheet} />
                 {/* <ReactDataSheet
                     data={grid}
                     valueRenderer={cell => cell.value}
@@ -93,7 +104,7 @@ export default function WorkFlow() {
                     {Array(numBlock).fill("1").map((e, i)=>{
                         return(
                         <div style={{padding: "10px"}}>
-                            <StepOneInput  ref = { chilRef} passData = {c => {setgrid(c)}} id = {i}/>
+                            <StepOneInput  ref = { chilRef} passData = {c => {setgrid( c)}} id = {i} initial = {Object.keys(Pys).includes(i.toString()) ? Pys[i.toString()] : ""}/> 
                         </div>
                         )
 
