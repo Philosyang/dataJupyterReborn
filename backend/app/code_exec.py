@@ -68,7 +68,7 @@ def drop_table(name):
             tablenames.pop(i)
             break
 
-def array_to_db(array, name):
+def array_to_db(name):
     # drop old mysql table
     for names in tablenames:
         if names == name:
@@ -86,7 +86,7 @@ def array_to_db(array, name):
    # number of columns in current table
     column_query = ''
     #iterating fieldnames
-    length = len(sheets[name][1])
+    length = len(sheets[name][0])
     for index, i in enumerate(sheets[name][1]):
         if index == length - 1:
             column_query += '%s VARCHAR(255)' % i
@@ -99,7 +99,7 @@ def array_to_db(array, name):
     # query example: 'CREATE TABLE sheet2 (col_1 VARCHAR(255), col_2 VARCHAR(255), col_3 VARCHAR(255), col_4 VARCHAR(255));
 
     #inserting each row
-    for record in array[1:]:
+    for record in sheets[name][1:]:
         ins = 'INSERT INTO %s\nValues (' % name
         for value in record:
             ins = ins + str(value) + ', '
