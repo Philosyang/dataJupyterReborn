@@ -15,6 +15,7 @@ def pythonText():
 
     # 2 write text to python file
     text_file = open("text.py", "w")
+    
 
     # 2.2 wrap text inside a function
     lines = '''def temp():\n    ''' # WARN: default indentation to 4 spaces

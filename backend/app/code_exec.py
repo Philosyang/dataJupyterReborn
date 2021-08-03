@@ -57,7 +57,24 @@ def get_array_from_table(tablename):
     sheets[tablename] = (new_table, new_fieldname)
     cursor.close()
         
-        
+def merge_column(c1, c2, spliter,sname, newname):
+    global rows
+    global columns
+    temp = sheets[sname]
+    index1 = -1
+    index2 = -1
+    for j,i in enumerate(temp[0]):
+        if i == c1:
+            index1 = j
+        elif i == c2:
+            index2 = j
+    if index1 != -1 and index2 != -1:
+        temp[0][index1] = newname
+        temp[0].pop(index2)
+        for i,j in enumerate(temp[1:rows]):
+            j[index1] = j[index1] + spliter + j[index2]
+            j.pop(index2)
+
 def drop_table(name):
     # drop mysql table
     cur = mysql.connection.cursor()
