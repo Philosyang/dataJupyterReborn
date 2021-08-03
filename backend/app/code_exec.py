@@ -22,6 +22,8 @@ mysql = MySQL(app)
 tablenames = []
 sheets = {}
 develops = []
+rows = 1
+columns = 0
 #var initv = []
 #    for (let i = 0; i < 1000; i++) {
 #        initv.append([])
@@ -55,6 +57,7 @@ def get_array_from_table(tablename):
     sheets[tablename] = (new_table, new_fieldname)
     cursor.close()
         
+        
 def drop_table(name):
     # drop mysql table
     cur = mysql.connection.cursor()
@@ -67,7 +70,28 @@ def drop_table(name):
         if names == name:
             tablenames.pop(i)
             break
-
+def split_column_by(c1, c2, spliter, sname, cname):
+    global rows
+    global columns
+    temp = sheets[sname]
+    index = -1
+    for j,i in enumerate(temp[0]):
+        if i == cname:
+            index = j
+            break
+    if index != -1:
+        temp[0][index] = c1
+        temp[0][columns] = c2
+        for row in temp[1:rows]:
+            splits = row[index].split(spliter)
+            row[index] = splits[0]
+            row.append(splits[1])
+def change_c_name(sname,cname, new_cname):
+    temp = sheets[sname]
+    for j,i in enumerate(temp[0]):
+        if i == cname:
+            temp[0][j] = new_cname
+            break
 def array_to_db(name):
     # drop old mysql table
     for names in tablenames:
@@ -75,7 +99,8 @@ def array_to_db(name):
             drop_table(name)
 
     # create new table
-    cur = mysql.connection.cursor()
+    sr = mysql.connection
+    cur = sr.cursor()
     # #record_len = len(array[0])
     # #create table with field on the first row
     # for i in array[0]:
@@ -86,14 +111,22 @@ def array_to_db(name):
    # number of columns in current table
     column_query = ''
     #iterating fieldnames
-    length = len(sheets[name][0])
-    for index, i in enumerate(sheets[name][1]):
-        if index == length - 1:
+    length = 0
+    for i in sheets[name][0]:
+        if (i != ''):
+            length += 1
+        else:
+            break
+    for index, i in enumerate(sheets[name][0]):
+        if(i == ''):
+            break
+        elif index == length - 1:
             column_query += '%s VARCHAR(255)' % i
         else:
             column_query += '%s VARCHAR(255), ' % i
   
-    query = 'CREATE TABLE %s (%s);' % (name, column_query)
+    query = 'CREATE TABLE IF NOT EXISTS %s (%s);' % (name, column_query)
+    #print(query)
     cur.execute(query)
     # https://dev.mysql.com/doc/refman/8.0/en/create-table.html
     # query example: 'CREATE TABLE sheet2 (col_1 VARCHAR(255), col_2 VARCHAR(255), col_3 VARCHAR(255), col_4 VARCHAR(255));
@@ -101,20 +134,36 @@ def array_to_db(name):
     #inserting each row
     for record in sheets[name][1:]:
         ins = 'INSERT INTO %s\nValues (' % name
-        for value in record:
-            ins = ins + str(value) + ', '
-        ins = ins + ')'
+        for p, value in enumerate(record):
+
+            if p == length - 1:
+                if str(value) == '':
+                    ins = ins + '""'
+                else:
+                    ins = ins + '"' + str(value) + '"'
+                break
+            if str(value) == '':
+                ins = ins + '""' + ', '
+
+            else:
+                ins = ins + '"' +str(value)+ '"' + ', '
+        ins = ins + ');'
         cur.execute(ins)
+    sr.commit()
     cur.close()
+    tablenames.append(name)
 
 
 # new we provide both sheets name and fields in order to add sheet
 def add_sheet(s_name, field_name):
+    global columns
+    columns = len(field_name)
     emptySheet = [["" for i in range(26)] for x in range(200)]
     length = len(field_name)
     emptySheet[0][0:length] = field_name
     sheets[s_name] = emptySheet
 def add_row(dic, s_name):
+    global rows
     #field= []
     row = []
     for key in dic:
@@ -122,7 +171,8 @@ def add_row(dic, s_name):
         row.append(dic[key])
     #if (len(sheets[s_name]) == 0):
     #    sheets[s_name].append(field)
-    sheets[s_name].append(row)
+    sheets[s_name][rows] = row
+    rows += 1
 
 def query(attr, value, s_name):
     if (len(sheets[s_name]) == 0):
@@ -139,7 +189,14 @@ def query(attr, value, s_name):
         return 'done'
     else:
         return 'not'
-
+def quickc():
+    cur = mysql.connection
+    curs = cur.cursor()
+    value = 'INSERT INTO plz Values ("Abdussalam Alawini | Computer Science | UIUC", "https://cs.illinois.edu/directory/profile/alawini", "https://cs.illinois.edu › directory › profile › alawini");'
+    curs.execute(value)
+    
+    cur.close()
+    curs.close()
 def pop_row(attr, value, s_name):
     if (len(sheets[s_name]) == 0):
         return 'not'
@@ -181,7 +238,6 @@ def run_text_as_code(loc):
 def getarray():
     ans = request.get_json()['text']
     message = run_text_as_code(ans)
-    print(sheets)
     #assume we want resultFromScript
     return {'result':sheets, 'terminal':message}
 
@@ -193,7 +249,6 @@ def cellChange():
    this_sheet_name = ans["sheet_name"]
    this_location = ans["location"]
    this_value = ans["value"]
-   print(this_sheet_name)
    this_sheet = sheets[this_sheet_name]    # get sheet
    this_sheet[this_location[0]-1][this_location[1]-1] = this_value # update value
    sheets[this_sheet_name] = this_sheet    # update sheet
