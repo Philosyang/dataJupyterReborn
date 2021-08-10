@@ -87,7 +87,26 @@ def drop_table(name):
         if names == name:
             tablenames.pop(i)
             break
-def split_column_by(c1, c2, spliter, sname, cname):
+def upper_case(sname, c_num, r_num):
+    if (c_num == -1 and r_num > -1):
+        for index, i in enumerate(sheets[sname][r_num+1]):
+            sheets[sname][r_num+1][index] = str(i).upper()
+    elif (r_num == -1 and c_num > -1):
+        for i in sheets[sname]:
+            i[c_num] = str(i[c_num]).upper()
+    elif (r_num >= -1 and c_num > -1):
+        sheets[sname][r_num+1][c_num] = str(sheets[sname][r_num+1][c_num]).upper()
+        
+def lower_case(sname, c_num, r_num):
+    if (c_num == -1 and r_num > -1):
+        for index, i in enumerate(sheets[sname][r_num+1]):
+            sheets[sname][r_num+1][index] = str(i).lower()
+    elif (r_num == -1 and c_num > -1):
+        for i in sheets[sname]:
+            i[c_num] = str(i[c_num]).lower()
+    elif (r_num >= -1 and c_num > -1):
+        sheets[sname][r_num+1][c_num] = str(sheets[sname][r_num+1][c_num]).lower()
+def split_column_by(sname,c1, c2, spliter,  cname):
     global rows
     global columns
     temp = sheets[sname]
@@ -103,6 +122,7 @@ def split_column_by(c1, c2, spliter, sname, cname):
             splits = row[index].split(spliter)
             row[index] = splits[0]
             row.append(splits[1])
+            
 def change_c_name(sname,cname, new_cname):
     temp = sheets[sname]
     for j,i in enumerate(temp[0]):
