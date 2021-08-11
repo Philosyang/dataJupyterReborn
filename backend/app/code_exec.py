@@ -10,7 +10,7 @@ import csv
 from contextlib import redirect_stdout
 import io
 from flask_mysqldb import MySQL # database connection
-
+import string 
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = '127.0.0.1'  # we are using a public github repo
@@ -87,6 +87,46 @@ def drop_table(name):
         if names == name:
             tablenames.pop(i)
             break
+def remove_punctuation(sname, c_num, r_num):
+    if (c_num == -1 and r_num > -1):
+        for index, i in enumerate(sheets[sname][r_num+1]):
+            st = str(i)
+            for j in st:
+                if j in string.punctuation:
+                    st = st.replace(j, '', 1) 
+
+                    
+            sheets[sname][r_num+1][index] = st
+    elif (r_num == -1 and c_num > -1):
+        for i in sheets[sname]:
+            st = str(i[c_num])
+            for j in st:
+                if j in string.punctuation:
+                    st = st.replace(j, '', 1) 
+            i[c_num] = st
+    elif (r_num >= -1 and c_num > -1):
+        st = str(sheets[sname][r_num+1][c_num])
+        for j in st:
+            if j in string.punctuation:
+                st = st.replace(j, '', 1) 
+        sheets[sname][r_num+1][c_num] = st
+def remove_number(sname, c_num, r_num):
+    if (c_num == -1 and r_num > -1):
+        for index, i in enumerate(sheets[sname][r_num+1]):
+            st = str(i)
+            result = ''.join([j for j in st if not j.isdigit()])
+
+                    
+            sheets[sname][r_num+1][index] = result
+    elif (r_num == -1 and c_num > -1):
+        for i in sheets[sname]:
+            st = str(i[c_num])
+            result = ''.join([j for j in st if not j.isdigit()])
+            i[c_num] = result
+    elif (r_num >= -1 and c_num > -1):
+        st = str(sheets[sname][r_num+1][c_num])
+        result = ''.join([j for j in st if not j.isdigit()])
+        sheets[sname][r_num+1][c_num] = result
 def upper_case(sname, c_num, r_num):
     if (c_num == -1 and r_num > -1):
         for index, i in enumerate(sheets[sname][r_num+1]):
