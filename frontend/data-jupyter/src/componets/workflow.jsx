@@ -6,6 +6,7 @@ import 'react-datasheet/lib/react-datasheet.css';
 import SpreadSheet from "./spreadSheet";
 import Apps from "./testSheet";
 import Test from "./testSheet";
+import FunctionBlock from "./functionBlock";
 
 
 export default function WorkFlow() {
@@ -17,7 +18,7 @@ export default function WorkFlow() {
     const [consoleMsg, setConsoleMsg] = useState({})
     const chilRef =  Array(numBlock).fill(useRef())
     const [Pys, setPys] = useState({})
-
+    const [dis, setDis] = useState(false)
 
 
     var references = {};
@@ -109,6 +110,9 @@ export default function WorkFlow() {
                         )
 
                     })}
+                </div>
+                <div>
+                    <FunctionBlock  style = {{display: dis === true ? "none": "none"}}  sheetSelection = {currentSheet} headers = {grid[currentSheet] != null ? grid[currentSheet][0].filter(e => e!==""): []}/>
                 </div>
 
                     {/* <div>

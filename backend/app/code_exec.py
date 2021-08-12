@@ -60,6 +60,8 @@ def get_array_from_table(tablename):
 def merge_column(c1, c2, spliter,sname, newname):
     global rows
     global columns
+    print(c1 + c2 + spliter + sname+ newname)
+
     temp = sheets[sname]
     index1 = -1
     index2 = -1
@@ -72,8 +74,9 @@ def merge_column(c1, c2, spliter,sname, newname):
         temp[0][index1] = newname
         temp[0].pop(index2)
         for i,j in enumerate(temp[1:rows]):
-            j[index1] = j[index1] + spliter + j[index2]
+            j[index1] = str(j[index1]) + spliter + str(j[index2])
             j.pop(index2)
+    print("done")
 
 def drop_table(name):
     # drop mysql table
@@ -231,6 +234,11 @@ def array_to_db(name):
     tablenames.append(name)
 
 
+def mergeColumns(c1, c2, sheetname, newname):
+    temp = sheets[sheetname]
+    
+
+
 # new we provide both sheets name and fields in order to add sheet
 def add_sheet(s_name, field_name):
     global columns
@@ -317,6 +325,14 @@ def getarray():
     message = run_text_as_code(ans)
     #assume we want resultFromScript
     return {'result':sheets, 'terminal':message}
+
+@app.route("/merge", methods =["POST"])
+def merge():
+    ans = request.get_json()
+
+    merge_column(ans["c1"],ans["c2"], ans["split"], ans['sname'], ans["newname"])
+    # split_column_by(ans["sname"],ans["c1"], ans["c2"], ans["split"], ans["newname"])
+    return "test"
 
 @app.route('/cellChange', methods=['POST'])
 def cellChange():
