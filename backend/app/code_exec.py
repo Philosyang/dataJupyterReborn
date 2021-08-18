@@ -243,7 +243,7 @@ def mergeColumns(c1, c2, sheetname, newname):
 def add_sheet(s_name, field_name):
     global columns
     columns = len(field_name)
-    emptySheet = [["" for i in range(26)] for x in range(200)]
+    emptySheet = [["" for i in range(26)] for x in range(1000)]
     length = len(field_name)
     emptySheet[0][0:length] = field_name
     sheets[s_name] = emptySheet
