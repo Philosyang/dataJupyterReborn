@@ -7,7 +7,7 @@ import Cell from "./cell"
 export default function SpreadSheet(props){
     const [sheetValue, setSheetValue] = useState(emptySheet)
     
-    var emptySheet =  Array(200).fill().map(() => Array(26).fill("")) //Array(200).fill(Array(26).fill(""))
+    var emptySheet =  Array(1000).fill().map(() => Array(26).fill("")) //Array(200).fill(Array(26).fill(""))
     const header = [...Array(27).keys()]
     const entireSheet = [header].concat(emptySheet)
     
