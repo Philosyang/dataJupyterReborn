@@ -10,9 +10,12 @@ import csv
 from contextlib import redirect_stdout
 import io
 from flask_mysqldb import MySQL # database connection
-import string 
-app = Flask(__name__)
+import string
 
+
+
+
+app = Flask(__name__)
 app.config['MYSQL_HOST'] = '127.0.0.1'  # we are using a public github repo
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '375120'
@@ -20,10 +23,16 @@ app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_DB'] = 'dataJupyter'
 mysql = MySQL(app)
 tablenames = []
-sheets = {}
+with open('movies_metadata.csv',encoding="utf8", newline='') as f:
+    reader = csv.reader(f)
+    data = list(reader)
+#da = [['ada:wwsd'], ['daw:dasd']]
+sheets = {'test':data}
 develops = []
-rows = 1
-columns = 0
+rows_lt = 0
+columns_lt = 0
+columns_rl = 199
+rows_rl = 25
 #var initv = []
 #    for (let i = 0; i < 1000; i++) {
 #        initv.append([])
@@ -57,11 +66,9 @@ def get_array_from_table(tablename):
     sheets[tablename] = (new_table, new_fieldname)
     cursor.close()
         
-def merge_column(c1, c2, spliter,sname, newname):
-    global rows
-    global columns
-    print(c1 + c2 + spliter + sname+ newname)
 
+
+def merge_column(c1, c2, spliter,sname, newname):
     temp = sheets[sname]
     index1 = -1
     index2 = -1
@@ -73,7 +80,7 @@ def merge_column(c1, c2, spliter,sname, newname):
     if index1 != -1 and index2 != -1:
         temp[0][index1] = newname
         temp[0].pop(index2)
-        for i,j in enumerate(temp[1:rows]):
+        for i,j in enumerate(temp[1:]):
             j[index1] = str(j[index1]) + spliter + str(j[index2])
             j.pop(index2)
     print("done")
@@ -150,22 +157,25 @@ def lower_case(sname, c_num, r_num):
     elif (r_num >= -1 and c_num > -1):
         sheets[sname][r_num+1][c_num] = str(sheets[sname][r_num+1][c_num]).lower()
 def split_column_by(sname,c1, c2, spliter,  cname):
-    global rows
-    global columns
     temp = sheets[sname]
     index = -1
+
+
+
     for j,i in enumerate(temp[0]):
         if i == cname:
             index = j
             break
     if index != -1:
         temp[0][index] = c1
-        temp[0][columns] = c2
-        for row in temp[1:rows]:
+        temp[0].append(c2)
+        for row in temp[1:]:
             splits = row[index].split(spliter)
             row[index] = splits[0]
-            row.append(splits[1])
+            if (len(splits) > 1):
+                row.append(splits[1])
             
+
 def change_c_name(sname,cname, new_cname):
     temp = sheets[sname]
     for j,i in enumerate(temp[0]):
@@ -232,23 +242,12 @@ def array_to_db(name):
     sr.commit()
     cur.close()
     tablenames.append(name)
-
-
-def mergeColumns(c1, c2, sheetname, newname):
-    temp = sheets[sheetname]
-    
-
-
-# new we provide both sheets name and fields in order to add sheet
+ 
 def add_sheet(s_name, field_name):
-    global columns
-    columns = len(field_name)
-    emptySheet = [["" for i in range(26)] for x in range(200)]
-    length = len(field_name)
-    emptySheet[0][0:length] = field_name
+    emptySheet = [field_name]
     sheets[s_name] = emptySheet
+# new we provide both sheets name and fields in order to add sheet
 def add_row(dic, s_name):
-    global rows
     #field= []
     row = []
     for key in dic:
@@ -256,8 +255,7 @@ def add_row(dic, s_name):
         row.append(dic[key])
     #if (len(sheets[s_name]) == 0):
     #    sheets[s_name].append(field)
-    sheets[s_name][rows] = row
-    rows += 1
+    sheets[s_name].append(row)
 
 def query(attr, value, s_name):
     if (len(sheets[s_name]) == 0):
@@ -318,13 +316,65 @@ def run_text_as_code(loc):
         f = "Stack trace : %s" %stack_trace
         out = s + '\n' + d + '\n' + f
         return [out, "exception"]
-
+#@app.route('/aceValue', methods=['POST'])
+#def getarray():
+#    global columns_lt
+#    global columns_rl
+#    global rows_lt
+#    global rows_rl
+#    ans = request.get_json()['text']
+#    message = run_text_as_code(ans)
+#    #assume we want resultFromScript
+#    out_s = {}
+#    for key in sheets:
+#        i = sheets[key]
+#        yes = -1
+#        b= []
+#        for row in i:
+#            
+#            b.append([])
+#        if len(i) > 200:
+#            yes = 1
+#            b = i[columns_lt:columns_rl]
+#        if len(i[0]) > 26:
+#            yes = 1
+#            for k,j in enumerate(i):
+#                b[k] = j[rows_lt:rows_rl]
+#        if yes == -1:
+#            out_s[key] = i
+#        else:
+#            out_s[key] = b
+#       
+#    return {'result':out_s, 'terminal':message}
 @app.route('/aceValue', methods=['POST'])
 def getarray():
+    global columns_lt
+    global columns_rl
+    global rows_lt
+    global rows_rl
     ans = request.get_json()['text']
     message = run_text_as_code(ans)
     #assume we want resultFromScript
-    return {'result':sheets, 'terminal':message}
+    out_s = {}
+    for key in sheets:
+        i = sheets[key]
+        yes = -1
+        b= []
+        for row in i:
+            b.append([])
+        if len(i) > 200:
+            yes = 1
+            b = i[columns_lt:columns_rl]
+        if len(i[0]) > 26:
+            yes = 1
+            for k,j in enumerate(i[columns_lt:columns_rl]):
+                b[k] = j[rows_lt:rows_rl]
+        if yes == -1:
+            out_s[key] = i
+        else:
+            out_s[key] = b
+        
+    return {'result':out_s, 'terminal':message}
 
 @app.route("/merge", methods =["POST"])
 def merge():
